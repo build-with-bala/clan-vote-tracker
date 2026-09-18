@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { loadVoterRegistry } from "@/lib/voter-registry";
 import { Users, UserCheck, Vote, TrendingUp } from "lucide-react";
 
 const AdminDashboard = () => {
@@ -66,7 +67,7 @@ const AdminDashboard = () => {
         { data: voters }
       ] = await Promise.all([
         supabase.from('votes').select('*', { count: 'exact' }),
-        supabase.from('voter_registry').select('*')
+        loadVoterRegistry()
       ]);
 
       // Calculate turnout

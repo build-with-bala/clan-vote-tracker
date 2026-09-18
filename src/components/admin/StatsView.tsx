@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { loadVoterRegistry } from "@/lib/voter-registry";
 import { Download, TrendingUp, Users, Award, ChevronDown, ChevronUp } from "lucide-react";
 import Papa from "papaparse";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -59,7 +60,7 @@ const StatsView = () => {
         supabase.from('votes').select('*'),
         supabase.from('candidates').select('*, votes(count)'),
         supabase.from('clans').select('*'),
-        supabase.from('voter_registry').select('*'),
+        loadVoterRegistry(),
       ]);
 
       // Calculate stats

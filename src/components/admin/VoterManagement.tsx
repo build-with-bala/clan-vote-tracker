@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
+import { loadVoterRegistry } from "@/lib/voter-registry";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Search, Plus, Edit2, Trash2, Download } from "lucide-react";
 import Papa from "papaparse";
@@ -56,14 +57,12 @@ const VoterManagement = () => {
   }, [searchTerm, voters]);
 
   const loadVoters = async () => {
-    const { data } = await supabase
-      .from('voter_registry')
-      .select('*')
-      .order('name');
-    
-    if (data) {
+    try {
+      const { data } = await loadVoterRegistry();
       setVoters(data);
       setFilteredVoters(data);
+    } catch (error) {
+      toast({ title: "Could not load voters", description: "Please retry.", variant: "destructive" });
     }
   };
 
@@ -406,6 +405,7 @@ const VoterManagement = () => {
                     <SelectItem value="MBA">MBA</SelectItem>
                     <SelectItem value="HHM">HHM</SelectItem>
                     <SelectItem value="DBM">DBM</SelectItem>
+                    <SelectItem value="DBAI">DBAI</SelectItem>
                     <SelectItem value="IPM">IPM</SelectItem>
                     <SelectItem value="PHD">PHD</SelectItem>
                   </SelectContent>
